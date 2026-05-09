@@ -1,0 +1,12 @@
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+}
+
+.wrapper {
+  background-color: #f8f9fd;
+  width: 1440px;
+  margin: 0 auto;
+  display: flex;
+}

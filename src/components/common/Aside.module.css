@@ -1,0 +1,40 @@
+.container {
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+}
+
+.logoSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 181px;
+}
+.menus {
+  display: flex;
+  flex-direction: column;
+}
+
+.menus ul li {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  padding: 13px 0 13px 28px;
+  cursor: pointer;
+}
+.menus ul li span {
+  background: linear-gradient(to right, #14add6, #384295);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  font-weight: 600;
+  font-size: 18px;
+  margin-left: 5px;
+}
+
+.submenu {
+  display: flex;
+  flex-direction: column;
+}
