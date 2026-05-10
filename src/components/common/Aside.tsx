@@ -1,5 +1,10 @@
+"use client"
+
 import { HandCoins, LayoutDashboard, StickyNote, UsersRound } from 'lucide-react';
 import s from './Aside.module.css';
+import { usePathname } from 'next/navigation';
+import { clsx } from 'clsx';
+import { useState } from 'react';
 
 const MENUS = [
   {
@@ -24,6 +29,11 @@ const MENUS = [
 ];
 
 export default function Aside() {
+  
+  const pathname = usePathname();
+  
+  const [activeSubmenu, setActiveSubmenu] = useState('인사정보등록');
+  
   return (
     <div className={s.container}>
       {/* 로고 */}
@@ -43,7 +53,15 @@ export default function Aside() {
               {item.submenus && (
                 <ul className={s.submenu}>
                   {item.submenus.map((subItem, subIdx) => (
-                    <li key={`submenu-subIdx`}>{subItem.title}</li>
+                    <li
+                      className={clsx(
+                        activeSubmenu === subItem.title && 'font-bold underline',
+                      )}
+                      key={`submenu-subIdx`}
+                      onClick={() => setActiveSubmenu(subItem.title)}
+                    >
+                      {subItem.title}
+                    </li>
                   ))}
                 </ul>
               )}
