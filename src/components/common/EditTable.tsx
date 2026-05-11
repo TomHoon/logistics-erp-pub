@@ -5,6 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { format } from 'date-fns';
 import { ChevronDownIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
+import { Input } from '@/components/ui/input';
 
 type ColumnType = {
   type: string;
@@ -16,7 +17,8 @@ type ColumnType = {
 type EditTableProps = {
   columns?: ColumnType[],
   rows?: Record<string, string | boolean>[],
-  tabName?: string
+  tabName?: string,
+  buttonRender?: () => ReactNode;
 }
 
 const emptyRow = {
@@ -36,11 +38,11 @@ const dummyColumns = [
 
 const dummyRows = [
   { 성명: '이미영', 가족관계: '배우자', 주민등록번호: '', 직업: '', 회사명: '', 동거여부: true, 부양가족: true, 장애인: false },
-  { 성명: '홍길동', 가족관계: '자녀', 주민등록번호: '99101-1020304', 직업: '', 회사명: '', 동거여부: true, 부양가족: true, 장애인: false },
+  { 성명: '홍길동`', 가족관계: '자녀', 주민등록번호: '99101-1020304', 직업: '', 회사명: '', 동거여부: true, 부양가족: true, 장애인: false },
 ]
 
 
-export default function EditTable({ columns = dummyColumns, rows = dummyRows, tabName } : EditTableProps) {
+export default function EditTable({ columns = dummyColumns, rows = dummyRows, tabName, buttonRender } : EditTableProps) {
   
   const [tableRows, setTableRows] = useState(rows);
   
@@ -81,10 +83,11 @@ export default function EditTable({ columns = dummyColumns, rows = dummyRows, ta
                 </Popover>
               </span>
             ) : column.type === 'checkbox' ? (
-              <span className='flex flex-1 justify-center'>
+              <span className='flex flex-1 pl-5'>
                 <Checkbox id="agree" />
               </span>
-            ) :  <span>{row[column.title]}</span>
+            // ) :  <span>{row[column.title]}</span>
+            ) : <Input defaultValue={row[column.title] as string} className="border-0 pl-1 flex"/>
           }
         </span>
       )
@@ -100,9 +103,24 @@ export default function EditTable({ columns = dummyColumns, rows = dummyRows, ta
   }
   
   return (
-    <div className='w-full'>
+    <div
+      className="
+        w-[1148px] ml-auto mr-auto bg-[#fff] pb-10 rounded-[15px]
+        mt-10
+        max-h-[570px] overflow-y-scroll
+        {/*relative*/}
+        {/*before:content-['']*/}
+        {/*before:absolute*/}
+        {/*before:left-0*/}
+        {/*before:top-[-15px]*/}
+        {/*before:w-full*/}
+        {/*before:h-[2px]*/}
+        {/*before:bg-black*/}
+        {/*mt-10*/}
+      "
+    >
       
-      <div id='buttonWrapper' className='flex justify-end gap-5 p-5'>
+      <div id='buttonWrapper' className='flex justify-end gap-5 mt-5 mb-5 pr-5'>
         {tabName === 'familiy' && (
           <Button>주민등록번호확인</Button>
         )}
@@ -110,14 +128,14 @@ export default function EditTable({ columns = dummyColumns, rows = dummyRows, ta
         <Button>행삭제</Button>
       </div>
       
-      <div id='colWrapper'>
+      <div id='colWrapper' className='sticky top-0 bg-[#fff] z-10'>
         <ul id='col' className='flex mb-[10px]'>
           {/*전체선택*/}
           <li className='flex-1 flex justify-center'>
             <Checkbox id="agree" />
           </li>
           {columns.map(column => (
-            <li className='flex-1 flex justify-center font-bold text-[16px]' key={column.title}>{column.title}</li>
+            <li className='flex-1 flex font-bold text-[16px]' key={column.title}>{column.title}</li>
           ))}
         </ul>
       </div>
@@ -129,6 +147,12 @@ export default function EditTable({ columns = dummyColumns, rows = dummyRows, ta
           
         </ul>
       </div>
+      
+      {typeof buttonRender === 'function' && (
+        <div id="buttonWrapper" className='flex justify-end gap-5 pr-5 pt-5'>
+          {buttonRender()}
+        </div>
+      )}
       
     </div>
   )

@@ -2,49 +2,44 @@
 
 import { HandCoins, LayoutDashboard, StickyNote, UsersRound } from 'lucide-react';
 import s from './Aside.module.css';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { clsx } from 'clsx';
-import { useState } from 'react';
+import {
+  INFO_MENUS,
+  PAYROLL_MENUS,
+  WORK_MENUS,
+  LABOR_MENUS
+} from '@/components/common/asideMenus/asideMenus';
 
-const MENUS = [
-  {
-    icon: <UsersRound color="#14ADD6" />,
-    title: '인사정보',
-    submenus: [
-      { title: '인사정보등록' },
-      { title: '사원명부/인사기록카드' },
-      { title: '인사발령등록' },
-    ],
-  },
-  {
-    icon: <HandCoins color="#14ADD6" />,
-    title: '경조비관리',
-    submenus: [{ title: '경조비신청' }, { title: '경조비신청현황' }],
-  },
-  {
-    icon: <StickyNote color="#14ADD6" />,
-    title: '증명서관리',
-    submenus: [{ title: '증명서발급' }, { title: '증명서발급대장' }],
-  },
-];
 
 export default function Aside() {
   
   const pathname = usePathname();
+  const activeSubmenu =
+    pathname ?? '';
   
-  const [activeSubmenu, setActiveSubmenu] = useState('인사정보등록');
+  
+  const MENU = {
+    info: INFO_MENUS,
+    payroll: PAYROLL_MENUS,
+    work: WORK_MENUS,
+    labor: LABOR_MENUS,
+  }[pathname.split('/').filter(Boolean)[0] || 'info'];
+  
+  
+  const router = useRouter();
   
   return (
     <div className={s.container}>
       {/* 로고 */}
       <div className={s.logoSection}>
-        <img src="login/logo.png" alt="" />
+        <img src="/login/logo.png" alt="" onClick={() => router.push('/info/personal/enroll')} />
       </div>
 
       {/* 메뉴 */}
       <div className={s.menus}>
         <ul>
-          {MENUS.map((item, idx) => (
+          {(MENU || INFO_MENUS).map((item, idx) => (
             <li key={`menu-${idx}`}>
               <div className="flex">
                 {item.icon}
@@ -55,10 +50,14 @@ export default function Aside() {
                   {item.submenus.map((subItem, subIdx) => (
                     <li
                       className={clsx(
-                        activeSubmenu === subItem.title && 'font-bold underline',
+                        activeSubmenu === subItem.path && 'font-bold underline',
                       )}
-                      key={`submenu-subIdx`}
-                      onClick={() => setActiveSubmenu(subItem.title)}
+                      key={`submenu-${subIdx}`}
+                      onClick={() => {
+                        if (subItem.path) {
+                          router.push(subItem.path);
+                        }
+                      }}
                     >
                       {subItem.title}
                     </li>

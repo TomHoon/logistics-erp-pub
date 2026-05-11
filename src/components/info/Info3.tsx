@@ -45,14 +45,13 @@ export default function Info3() {
         <FieldLabel htmlFor="입사일자">입사일자</FieldLabel>
         <Popover>
           <PopoverTrigger>
-            <Button
-              variant="outline"
+            <div
               data-empty={!date}
-              className="w-[212px] justify-between text-left font-normal data-[empty=true]:text-muted-foreground"
+              className="w-[150px] flex justify-between text-left font-normal data-[empty=true]:text-muted-foreground border-[1px] rounded-[5px] pt-2 pl-1 pb-1"
             >
               {date ? format(date, "PPP") : <span>Pick a date</span>}
               <ChevronDownIcon />
-            </Button>
+            </div>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
             <Calendar
@@ -69,14 +68,13 @@ export default function Info3() {
         <FieldLabel htmlFor="퇴직일자">퇴직일자</FieldLabel>
         <Popover>
           <PopoverTrigger>
-            <Button
-              variant="outline"
+            <div
               data-empty={!date}
-              className="w-[212px] justify-between text-left font-normal data-[empty=true]:text-muted-foreground"
+              className="w-[150px] flex justify-between text-left font-normal data-[empty=true]:text-muted-foreground border-[1px] rounded-[5px] pt-2 pl-1 pb-1"
             >
               {date ? format(date, "PPP") : <span>Pick a date</span>}
               <ChevronDownIcon />
-            </Button>
+            </div>
           </PopoverTrigger>
           <PopoverContent className="w-full p-0" align="start">
             <Calendar
