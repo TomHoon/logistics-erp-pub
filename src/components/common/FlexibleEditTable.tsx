@@ -1,14 +1,15 @@
 'use client'
 
-import { Checkbox } from '@/components/ui/checkbox';
+import { clsx } from 'clsx';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { ReactNode, useState } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
 import { ChevronDownIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
-import { clsx } from 'clsx';
+
 
 type ColumnType = {
   type: string;
@@ -17,13 +18,12 @@ type ColumnType = {
   date?: Date;
 }
 
-type EditTableProps = {
-  /** 필수: type, title */
-  columns?: ColumnType[],
-  /** key-value */
-  rows?: Record<string, string | boolean>[],
-  tabName?: string,
-  title?: string,
+type FlexibleEditTableProps = {
+  width?: string;
+  title?: string;
+  columns?: ColumnType[];
+  rows?: Record<string, string | boolean>[];
+  tabName?: string;
   buttonRender?: () => ReactNode;
 }
 
@@ -31,24 +31,7 @@ const emptyRow = {
   성명: '', 가족관계: '', 주민등록번호: '', 직업: '', 회사명: '', 동거여부: false, 부양가족: false, 장애인: false
 }
 
-const dummyColumns = [
-  { type: 'text', title: '성명' },
-  { type: 'text', title: '가족관계' },
-  { type: 'text', title: '주민등록번호' },
-  { type: 'text', title: '직업' },
-  { type: 'text', title: '회사명' },
-  { type: 'checkbox', title: '동거여부' },
-  { type: 'checkbox', title: '부양가족' },
-  { type: 'checkbox', title: '장애인' },
-]
-
-const dummyRows = [
-  { 성명: '이미영', 가족관계: '배우자', 주민등록번호: '', 직업: '', 회사명: '', 동거여부: true, 부양가족: true, 장애인: false },
-  { 성명: '홍길동`', 가족관계: '자녀', 주민등록번호: '99101-1020304', 직업: '', 회사명: '', 동거여부: true, 부양가족: true, 장애인: false },
-]
-
-
-export default function EditTable({ columns = dummyColumns, rows = dummyRows, tabName, buttonRender, title } : EditTableProps) {
+export default function FlexibleEditTable({width, columns, rows, buttonRender, title}: FlexibleEditTableProps) {
   
   const [tableRows, setTableRows] = useState(rows);
   
@@ -62,12 +45,12 @@ export default function EditTable({ columns = dummyColumns, rows = dummyRows, ta
       </span>,
     ];
     
-    columns.forEach((column, i) => {
+    columns && columns.forEach((column, i) => {
       contentList.push(
-        <span className='flex-1 flex'>
+        <span className='flex-1 flex justify-center'>
           { column.type === 'calendar'
             ? (
-              <span className='flex flex-1'>
+              <span className='flex flex-1 justify-center'>
                 <Popover>
                   <PopoverTrigger>
                     <Button
@@ -92,15 +75,15 @@ export default function EditTable({ columns = dummyColumns, rows = dummyRows, ta
               <span className='flex flex-1 pl-5'>
                 <Checkbox id="agree" />
               </span>
-            // ) :  <span>{row[column.title]}</span>
-            ) : <Input defaultValue={row[column.title] as string} className="border-0 pl-1 w-[120px] flex"/>
+              // ) :  <span>{row[column.title]}</span>
+            ) : <Input defaultValue={row[column.title] as string} className="border-0 pl-1 flex"/>
           }
         </span>
       )
     });
     
     result.push(
-      <li className='flex'>
+      <li className='flex items-center'>
         {contentList}
       </li>
     )
@@ -110,28 +93,20 @@ export default function EditTable({ columns = dummyColumns, rows = dummyRows, ta
   
   return (
     <div
-      className="
-        w-[1148px] ml-auto mr-auto bg-[#fff] pb-10 rounded-[15px]
-        mt-10
-        max-h-[570px] overflow-y-scroll
-      "
+      className={clsx(
+        'mt-10 bg-[#fff] pb-10 rounded-[15px]',
+        width ? `w-[${width}]` : 'w-[1148px] mx-auto',
+      )}
     >
-      <div className={clsx(
-        'flex',
-        title ? 'justify-between' : 'justify-end'
-      )}>
+      <div className='flex justify-between'>
         {title && (
           <div className='pt-5 pl-5 text-[20px] font-[700]'>
             <p>{title}</p>
           </div>
         )}
-
         
         <div id='buttonWrapper' className='flex justify-end gap-5 mt-5 mb-5 pr-5'>
-          {tabName === 'familiy' && (
-            <Button>주민등록번호확인</Button>
-          )}
-          <Button onClick={() => setTableRows(prev => [...prev, emptyRow])}>행추가</Button>
+          <Button onClick={() => setTableRows(prev => [...(prev || []), emptyRow])}>행추가</Button>
           <Button>행삭제</Button>
         </div>
       </div>
@@ -142,7 +117,7 @@ export default function EditTable({ columns = dummyColumns, rows = dummyRows, ta
           <li className='flex-1 flex justify-center'>
             <Checkbox id="agree" />
           </li>
-          {columns.map(column => (
+          {columns && columns.map(column => (
             <li className='flex-1 flex font-bold text-[16px]' key={column.title}>{column.title}</li>
           ))}
         </ul>
@@ -151,8 +126,8 @@ export default function EditTable({ columns = dummyColumns, rows = dummyRows, ta
       <div id='rowWrapper'>
         <ul className='flex flex-col gap-5'>
           
-          {tableRows.map((row, idx) => (getRowContent(row, idx)))}
-          
+          {tableRows && tableRows.map((row, idx) => (getRowContent(row, idx)))}
+        
         </ul>
       </div>
       
@@ -161,7 +136,6 @@ export default function EditTable({ columns = dummyColumns, rows = dummyRows, ta
           {buttonRender()}
         </div>
       )}
-      
     </div>
   )
 }

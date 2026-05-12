@@ -2,7 +2,7 @@ import {
   BriefcaseBusiness,
   CalendarClock,
   CalendarDays,
-  HandCoins,
+  HandCoins, ShieldCheck,
   StickyNote,
   UsersRound,
   Wallet,
@@ -75,6 +75,18 @@ export const PAYROLL_MENUS = [
       { title: '기본수당외수당관리', path: '/payroll/allowance' },
       { title: '급여계산', path: '/payroll/calculate' },
       { title: '급여조회', path: '/payroll/search' },
+    ],
+  },
+  
+  {
+    icon: <ShieldCheck color="#14ADD6" />,
+    title: '4대보험관리',
+    submenus: [
+      { title: '4대보험요율표설정', path: '/payroll/insurance' },
+      { title: '국민연금관리', path: '/payroll/insurance/pension' },
+      { title: '건강보험관리', path: '/payroll/insurance/health' },
+      { title: '고용보험관리', path: '/payroll/insurance/employment' },
+      { title: '4대보험 취득/상실내역', path: '/payroll/insurance/status' },
     ],
   },
 ];
